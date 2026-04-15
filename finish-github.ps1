@@ -19,23 +19,30 @@ gh auth refresh -s project -h github.com
 $head = "chore/submission-final"
 Write-Host "Проверка ветки $head..."
 git fetch origin
-$hasBranch = git show-ref --verify --quiet "refs/heads/$head"; if ($LASTEXITCODE -ne 0) {
-  git checkout main
-  git pull origin main
-  git checkout -b $head
-} else {
+git checkout main
+git pull origin main
+git show-ref --verify --quiet "refs/heads/$head"
+if ($LASTEXITCODE -eq 0) {
   git checkout $head
+} else {
+  git show-ref --verify --quiet "refs/remotes/origin/$head"
+  if ($LASTEXITCODE -eq 0) {
+    git checkout -b $head "origin/$head"
+  } else {
+    git checkout -b $head
+  }
 }
 
-git pull origin main --no-edit 2>$null
+git merge origin/main --no-edit
 git push -u origin $head
 
 $existing = gh pr list -R $Full --head "$Owner`:$head" --json number --jq "length"
 if ([int]$existing -eq 0) {
-  gh pr create -R $Full --base main --head $head `
+  $prNumber = gh pr create -R $Full --base main --head $head `
     --title "Финальное оформление сдачи практики" `
-    --body "Добавлены ссылки для сдачи в README. Объединение в main для фиксации Pull Request по заданию."
-  gh pr merge -R $Full --merge --delete-branch
+    --body "Добавлены ссылки для сдачи в README. Объединение в main для фиксации Pull Request по заданию." `
+    --json number --jq ".number"
+  gh pr merge $prNumber -R $Full --merge --delete-branch
 } else {
   Write-Host "PR для $head уже есть — пропуск создания."
 }
@@ -56,8 +63,11 @@ gh project field-create $projNum --owner $Owner --name "Priority" --data-type SI
 gh project field-create $projNum --owner $Owner --name "Start Date" --data-type DATE
 gh project field-create $projNum --owner $Owner --name "End Date" --data-type DATE
 gh project field-create $projNum --owner $Owner --name "Original Estimate" --data-type NUMBER
-# Если поле Status уже создано шаблоном и имя занято — переименуйте в UI или измените имя ниже.
+# Если поле Status уже создано шаблоном и имя занято — задайте статусы вручную в интерфейсе проекта.
 gh project field-create $projNum --owner $Owner --name "Status" --data-type SINGLE_SELECT --single-select-options "Proposed,Active,Resolved,Completed"
+if ($LASTEXITCODE -ne 0) {
+  Write-Warning "Не удалось создать поле Status через CLI — настройте статусы в веб-интерфейсе проекта."
+}
 
 function New-IssueToProject {
   param([string]$Title, [string]$Body)
