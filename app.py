@@ -40,7 +40,7 @@ def show_stats(tasks: list[dict]) -> None:
 
 
 def add_task(tasks: list[dict]) -> None:
-    title = input("Введите текст задачи: ").strip()
+    title = " ".join(input("Введите текст задачи: ").strip().split())
     if not title:
         print("Пустую задачу добавить нельзя.\n")
         return
