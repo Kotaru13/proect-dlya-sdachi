@@ -40,9 +40,15 @@ def show_stats(tasks: list[dict]) -> None:
 
 
 def add_task(tasks: list[dict]) -> None:
-    title = input("Введите текст задачи: ").strip()
+    title = " ".join(input("Введите текст задачи: ").strip().split())
     if not title:
         print("Пустую задачу добавить нельзя.\n")
+        return
+    if len(title) > 120:
+        print("Слишком длинная задача (максимум 120 символов).\n")
+        return
+    if any(task["title"].lower() == title.lower() for task in tasks):
+        print("Такая задача уже есть в списке.\n")
         return
     tasks.append({"title": title, "done": False})
     save_tasks(tasks)
