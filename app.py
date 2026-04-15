@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 DATA_FILE = Path("tasks.json")
 
 
@@ -15,7 +14,9 @@ def load_tasks() -> list[dict]:
 
 
 def save_tasks(tasks: list[dict]) -> None:
-    DATA_FILE.write_text(json.dumps(tasks, ensure_ascii=False, indent=2), encoding="utf-8")
+    DATA_FILE.write_text(
+        json.dumps(tasks, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
 
 def show_tasks(tasks: list[dict]) -> None:
