@@ -13,12 +13,44 @@
 ## Требования
 
 - Python 3.10+.
+- инструменты качества: `ruff`, `black`, `pre-commit`.
 
 ## Запуск
 
 ```bash
 python app.py
 ```
+
+## Форматирование, линтер и pre-commit
+
+Установка инструментов:
+
+```bash
+python -m pip install black ruff pre-commit
+```
+
+Проверки вручную:
+
+```bash
+ruff check .
+black --check .
+```
+
+Автоформатирование:
+
+```bash
+ruff check . --fix
+black .
+```
+
+Подключение pre-commit hooks:
+
+```bash
+pre-commit install
+pre-commit run --all-files
+```
+
+Перед каждым коммитом будут запускаться проверки из `.pre-commit-config.yaml`.
 
 ## Как проверить вручную
 
@@ -32,7 +64,9 @@ python app.py
 
 - `app.py` — основной код приложения;
 - `tasks.json` — файл хранения задач (создается автоматически при первом сохранении);
-- `.gitignore` — исключения для Git.
+- `.gitignore` — исключения для Git;
+- `pyproject.toml` — конфигурация Black и Ruff;
+- `.pre-commit-config.yaml` — конфигурация pre-commit hooks.
 
 ## Идея для развития
 
