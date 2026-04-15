@@ -29,6 +29,16 @@ def show_tasks(tasks: list[dict]) -> None:
     print()
 
 
+def show_stats(tasks: list[dict]) -> None:
+    total = len(tasks)
+    done = sum(1 for task in tasks if task["done"])
+    pending = total - done
+    print("Статистика задач:")
+    print(f"- Всего: {total}")
+    print(f"- Выполнено: {done}")
+    print(f"- В работе: {pending}\n")
+
+
 def add_task(tasks: list[dict]) -> None:
     title = input("Введите текст задачи: ").strip()
     if not title:
@@ -81,6 +91,7 @@ def print_menu() -> None:
     print("2. Добавить задачу")
     print("3. Отметить задачу выполненной")
     print("4. Удалить задачу")
+    print("5. Показать статистику")
     print("0. Выход")
 
 
@@ -98,6 +109,8 @@ def main() -> None:
             mark_done(tasks)
         elif choice == "4":
             delete_task(tasks)
+        elif choice == "5":
+            show_stats(tasks)
         elif choice == "0":
             print("Работа завершена.")
             break
