@@ -47,3 +47,8 @@ python app.py
 - `main` — стабильная ветка;
 - `feature/input-validation` — доработка валидации;
 - `feature/readme-improve` — улучшение документации.
+
+## Ссылки для сдачи
+
+- Репозиторий: [Kotaru13/proect-dlya-sdachi](https://github.com/Kotaru13/proect-dlya-sdachi)
+- GitHub Project: создайте проект по заданию и вставьте ссылку сюда после настройки.
